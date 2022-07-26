@@ -1,0 +1,8 @@
+spring:
+  data:
+    mongodb:
+      password: mongo
+      username: mongo
+      uri: mongodb://mongo:mongo@localhost:27017
+      database: test
+      authentication-database: admin
