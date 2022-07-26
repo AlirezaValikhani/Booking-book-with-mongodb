@@ -20,4 +20,10 @@ public class Book {
     private Boolean isReserve;
     private User user;
     private Library library;
+
+    public Book(String name, String authorName, Boolean isReserve) {
+        this.name = name;
+        this.authorName = authorName;
+        this.isReserve = isReserve;
+    }
 }

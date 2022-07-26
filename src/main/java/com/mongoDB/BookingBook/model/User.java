@@ -22,4 +22,10 @@ public class User {
     private String email;
     private List<Book> books;
     private Library library;
+
+    public User(String fullName, String nationalCode, String email) {
+        this.fullName = fullName;
+        this.nationalCode = nationalCode;
+        this.email = email;
+    }
 }
