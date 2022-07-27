@@ -12,8 +12,8 @@ import java.util.List;
 public class LibraryServiceImpl implements LibraryService {
     private final LibraryRepository libraryRepository;
 
-    public LibraryServiceImpl(LibraryRepository libraryRepository) {
-        this.libraryRepository = libraryRepository;
+    public LibraryServiceImpl() {
+        this.libraryRepository = null;
     }
 
     @Override
