@@ -6,6 +6,8 @@ import com.mongoDB.BookingBook.service.impl.BookServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/book")
 public class BookController {
@@ -28,5 +30,15 @@ public class BookController {
     @PutMapping("/")
     public void update(@RequestBody Book book) {
         bookService.update(book);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable String id) {
+        return ResponseEntity.ok().body(bookService.delete(id));
+    }
+
+    @PostMapping("/search")
+    public ResponseEntity<List<Book>> search(@RequestBody Book book) {
+        return ResponseEntity.ok().body(bookService.search(book));
     }
 }

@@ -35,12 +35,14 @@ public class BookServiceImpl implements BookService{
         bookRepository.update(book);
     }
 
-    /*@Override
-    public String delete(BookDto bookDto) {
-        Book book = findById(bookDto.getId());
-        if (book == null)
-            return "User not found";
-        else bookRepository.delete(book);
+    @Override
+    public String delete(String id) {
+        bookRepository.delete(id);
         return "Book deleted successfully";
-    }*/
+    }
+
+    @Override
+    public List<Book> search(Book book) {
+        return bookRepository.search(book);
+    }
 }
