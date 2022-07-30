@@ -40,9 +40,9 @@ public class BookController {
         return ResponseEntity.ok().body(bookService.delete(id));
     }
 
-    @PostMapping("/search")
-    public ResponseEntity<List<Book>> search(@RequestBody Book book) {
-        return ResponseEntity.ok().body(bookService.search(book));
+    @GetMapping("/search/{term}")
+    public ResponseEntity<List<Book>> search(@PathVariable String term) {
+        return ResponseEntity.ok().body(bookService.search(term));
     }
 
     @PostMapping("/listP")

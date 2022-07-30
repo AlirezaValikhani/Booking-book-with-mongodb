@@ -96,16 +96,18 @@ public class BookRepository {
         return book;
     }
 
-    public List<Book> search(Book book) {
-        String name = "name";
-        String authorName = "authorName";
+    public List<Book> search(String search) {
         List<BasicDBObject> aggregationInput = new ArrayList<>();
         aggregationInput.add(
                 new BasicDBObject("$match",
-                        new BasicDBObject("$and",
+                        new BasicDBObject("$or",
                                 Arrays.asList(
-                                        new BasicDBObject(name, book.getName()),
-                                        new BasicDBObject(authorName, book.getAuthorName())
+                                        new BasicDBObject("name",
+                                                new BasicDBObject("$regex", search).append("$options", "i")
+                                        ),
+                                        new BasicDBObject("authorName",
+                                                new BasicDBObject("$regex", search).append("$options", "i")
+                                        )
                                 )
                         )
                 )
@@ -115,18 +117,19 @@ public class BookRepository {
         List<Book> books = new ArrayList<>();
         for (Document d : documents) {
             Book finalBook = new Book();
-            finalBook.setName(d.getString(name));
-            finalBook.setAuthorName(d.getString(authorName));
+            finalBook.setName(d.getString("name"));
+            finalBook.setAuthorName(d.getString("authorName"));//How to set _id and idReserve
             books.add(finalBook);
         }
         return books;
     }
 
-    public List<Book> pagination(Integer size,Integer page) {
+
+    public List<Book> pagination(Integer size, Integer page) {
         List<BasicDBObject> aggregationInput = new ArrayList<>();
         aggregationInput.add(
                 new BasicDBObject("$sort",
-                        new BasicDBObject("_id",1)
+                        new BasicDBObject("_id", 1)
                 )
         );
         aggregationInput.add(

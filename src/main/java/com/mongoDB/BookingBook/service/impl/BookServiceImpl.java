@@ -44,11 +44,11 @@ public class BookServiceImpl implements BookService{
     }
 
     @Override
-    public List<Book> search(Book book) {
-        List<Book> books = bookRepository.search(book);
+    public List<Book> search(String search) {
+        List<Book> books = bookRepository.search(search);/*
         if (books.size() == 0)
             throw new BookNotFoundException();
-        else return books;
+        else*/ return books;
     }
 
     @Override

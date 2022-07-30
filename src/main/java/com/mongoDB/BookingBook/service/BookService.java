@@ -11,6 +11,6 @@ public interface BookService {
     Book findById(String id);
     List<Book> findAll();
     String delete(String id);
-    List<Book> search(Book book);
+    List<Book> search(String search);
     List<Book> pagination(PaginationDto paginationDto);
 }
