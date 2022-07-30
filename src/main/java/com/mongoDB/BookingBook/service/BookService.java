@@ -1,6 +1,7 @@
 package com.mongoDB.BookingBook.service;
 
 import com.mongoDB.BookingBook.dto.BookDto;
+import com.mongoDB.BookingBook.dto.PaginationDto;
 import com.mongoDB.BookingBook.model.Book;
 
 import java.util.List;
@@ -11,4 +12,5 @@ public interface BookService {
     List<Book> findAll();
     String delete(String id);
     List<Book> search(Book book);
+    List<Book> pagination(PaginationDto paginationDto);
 }

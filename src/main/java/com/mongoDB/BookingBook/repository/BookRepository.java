@@ -2,6 +2,7 @@ package com.mongoDB.BookingBook.repository;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mongoDB.BookingBook.dto.PaginationDto;
 import com.mongoDB.BookingBook.model.Book;
 import com.mongodb.*;
 import com.mongodb.client.MongoCollection;
@@ -116,6 +117,35 @@ public class BookRepository {
             Book finalBook = new Book();
             finalBook.setName(d.getString(name));
             finalBook.setAuthorName(d.getString(authorName));
+            books.add(finalBook);
+        }
+        return books;
+    }
+
+    public List<Book> pagination(Integer size,Integer page) {
+        List<BasicDBObject> aggregationInput = new ArrayList<>();
+        aggregationInput.add(
+                new BasicDBObject("$sort",
+                        new BasicDBObject("_id",1)
+                )
+        );
+        aggregationInput.add(
+                new BasicDBObject("$skip",
+                        size * page)
+        );
+        aggregationInput.add(
+                new BasicDBObject("$limit",
+                        size)
+        );
+        List<Document> documents = mongoDatabase.getCollection("booking")
+                .aggregate(aggregationInput).into(new ArrayList<>());
+        List<Book> books = new ArrayList<>();
+        for (Document d : documents) {
+            Book finalBook = new Book();
+            finalBook.setName(d.getString("name"));
+            finalBook.setAuthorName(d.getString("authorName"));
+            finalBook.setIsReserve(d.getBoolean("isReserve"));
+            finalBook.setId(String.valueOf(d.getObjectId("_id")));
             books.add(finalBook);
         }
         return books;

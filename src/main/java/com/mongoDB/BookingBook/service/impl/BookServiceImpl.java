@@ -1,6 +1,7 @@
 package com.mongoDB.BookingBook.service.impl;
 
 import com.mongoDB.BookingBook.dto.BookDto;
+import com.mongoDB.BookingBook.dto.PaginationDto;
 import com.mongoDB.BookingBook.exception.BookNotFoundException;
 import com.mongoDB.BookingBook.model.Book;
 import com.mongoDB.BookingBook.repository.BookRepository;
@@ -48,5 +49,10 @@ public class BookServiceImpl implements BookService{
         if (books.size() == 0)
             throw new BookNotFoundException();
         else return books;
+    }
+
+    @Override
+    public List<Book> pagination(PaginationDto paginationDto) {
+        return bookRepository.pagination(paginationDto.getSize(),paginationDto.getPage());
     }
 }

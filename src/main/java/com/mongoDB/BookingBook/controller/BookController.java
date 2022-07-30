@@ -1,8 +1,11 @@
 package com.mongoDB.BookingBook.controller;
 
 import com.mongoDB.BookingBook.dto.BookDto;
+import com.mongoDB.BookingBook.dto.PaginationDto;
 import com.mongoDB.BookingBook.model.Book;
 import com.mongoDB.BookingBook.service.impl.BookServiceImpl;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,5 +43,10 @@ public class BookController {
     @PostMapping("/search")
     public ResponseEntity<List<Book>> search(@RequestBody Book book) {
         return ResponseEntity.ok().body(bookService.search(book));
+    }
+
+    @PostMapping("/listP")
+    public ResponseEntity<List<Book>> paginationSearch(@RequestBody PaginationDto paginationDto) {
+        return ResponseEntity.ok().body(bookService.pagination(paginationDto));
     }
 }
