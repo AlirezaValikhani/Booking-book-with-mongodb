@@ -1,6 +1,7 @@
 package com.mongoDB.BookingBook.service.impl;
 
 import com.mongoDB.BookingBook.dto.BookDto;
+import com.mongoDB.BookingBook.exception.BookNotFoundException;
 import com.mongoDB.BookingBook.model.Book;
 import com.mongoDB.BookingBook.repository.BookRepository;
 import com.mongoDB.BookingBook.service.BookService;
@@ -43,6 +44,9 @@ public class BookServiceImpl implements BookService{
 
     @Override
     public List<Book> search(Book book) {
-        return bookRepository.search(book);
+        List<Book> books = bookRepository.search(book);
+        if (books.size() == 0)
+            throw new BookNotFoundException();
+        else return books;
     }
 }
