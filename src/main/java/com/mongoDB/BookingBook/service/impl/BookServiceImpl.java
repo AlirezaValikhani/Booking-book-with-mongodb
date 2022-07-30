@@ -17,7 +17,7 @@ public class BookServiceImpl implements BookService{
     }
 
     public Book save(BookDto bookDto) {
-        Book book = new Book(bookDto.getName(), bookDto.getAuthorName(),false);
+        Book book = new Book(null,bookDto.getName(), bookDto.getAuthorName(),false,null,null);
         return bookRepository.save(book);
     }
 

@@ -1,5 +1,6 @@
 package com.mongoDB.BookingBook.controller;
 
+import com.mongoDB.BookingBook.dto.ReserveInfo;
 import com.mongoDB.BookingBook.dto.UserDto;
 import com.mongoDB.BookingBook.model.User;
 import com.mongoDB.BookingBook.service.impl.UserServiceImpl;
@@ -23,7 +24,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> findById(@PathVariable String id) {
+    public ResponseEntity<User> findById(@PathVariable @RequestParam String id) {
         return ResponseEntity.ok(userService.findById(id));
     }
 
@@ -32,8 +33,17 @@ public class UserController {
         return ResponseEntity.ok(userService.findAll());
     }
 
-    @DeleteMapping("/")
-    public ResponseEntity<String> delete(@RequestBody UserDto userDto) {
-        return ResponseEntity.ok(userService.delete(userDto));
+    @PutMapping("/")
+    public ResponseEntity<String> update(@RequestBody UserDto userDto) {
+        return ResponseEntity.ok(userService.update(userDto));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable @RequestParam String id) {
+        return ResponseEntity.ok(userService.delete(id));
+    }
+    @PostMapping("/reserveBook")
+    public ResponseEntity<String> reserveBook(@RequestBody ReserveInfo reserveInfo) {
+        return ResponseEntity.ok(userService.reserveBook(reserveInfo));
     }
 }
