@@ -1,19 +1,15 @@
 package com.mongoDB.BookingBook.repository;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mongoDB.BookingBook.dto.PaginationDto;
+import com.mongoDB.BookingBook.dto.SearchPaginationDto;
 import com.mongoDB.BookingBook.model.Book;
 import com.mongodb.*;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.UpdateOptions;
-import com.mongodb.client.model.Updates;
+import lombok.SneakyThrows;
 import org.bson.Document;
-import org.bson.conversions.Bson;
-import org.bson.json.JsonObject;
 import org.bson.types.ObjectId;
-import org.json.JSONObject;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -30,9 +26,11 @@ public class BookRepository {
     private final MongoClient mongoClient;
     private final MongoDatabase mongoDatabase;
     private final MongoTemplate mongoTemplate;
+    private final ObjectMapper mapper;
 
-    public BookRepository(MongoTemplate mongoTemplate) {
+    public BookRepository(MongoTemplate mongoTemplate, ObjectMapper mapper) {
         this.mongoTemplate = mongoTemplate;
+        this.mapper = mapper;
         MongoClientURI connectionString = new MongoClientURI("mongodb://mongo:mongo@192.168.2.180:27017");
         this.mongoClient = new MongoClient(connectionString);
         this.mongoDatabase = mongoClient.getDatabase("booking");
@@ -96,37 +94,23 @@ public class BookRepository {
         return book;
     }
 
-    public List<Book> search(String search) {
+    @SneakyThrows
+    public List<Book> search(SearchPaginationDto searchDto) {
         List<BasicDBObject> aggregationInput = new ArrayList<>();
         aggregationInput.add(
                 new BasicDBObject("$match",
                         new BasicDBObject("$or",
                                 Arrays.asList(
                                         new BasicDBObject("name",
-                                                new BasicDBObject("$regex", search).append("$options", "i")
+                                                new BasicDBObject("$regex", searchDto.getSearch()).append("$options", "i")
                                         ),
                                         new BasicDBObject("authorName",
-                                                new BasicDBObject("$regex", search).append("$options", "i")
+                                                new BasicDBObject("$regex", searchDto.getSearch()).append("$options", "i")
                                         )
                                 )
                         )
                 )
         );
-        List<Document> documents = mongoDatabase.getCollection("booking")
-                .aggregate(aggregationInput).into(new ArrayList<>());
-        List<Book> books = new ArrayList<>();
-        for (Document d : documents) {
-            Book finalBook = new Book();
-            finalBook.setName(d.getString("name"));
-            finalBook.setAuthorName(d.getString("authorName"));//How to set _id and idReserve
-            books.add(finalBook);
-        }
-        return books;
-    }
-
-
-    public List<Book> pagination(Integer size, Integer page) {
-        List<BasicDBObject> aggregationInput = new ArrayList<>();
         aggregationInput.add(
                 new BasicDBObject("$sort",
                         new BasicDBObject("_id", 1)
@@ -134,22 +118,18 @@ public class BookRepository {
         );
         aggregationInput.add(
                 new BasicDBObject("$skip",
-                        size * page)
+                        searchDto.getSize() * searchDto.getPage())
         );
         aggregationInput.add(
                 new BasicDBObject("$limit",
-                        size)
+                        searchDto.getSize())
         );
         List<Document> documents = mongoDatabase.getCollection("booking")
                 .aggregate(aggregationInput).into(new ArrayList<>());
         List<Book> books = new ArrayList<>();
         for (Document d : documents) {
-            Book finalBook = new Book();
-            finalBook.setName(d.getString("name"));
-            finalBook.setAuthorName(d.getString("authorName"));
-            finalBook.setIsReserve(d.getBoolean("isReserve"));
-            finalBook.setId(String.valueOf(d.getObjectId("_id")));
-            books.add(finalBook);
+            Book book = mapper.readValue(d.toJson(), Book.class);
+            books.add(book);
         }
         return books;
     }
