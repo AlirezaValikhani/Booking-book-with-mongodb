@@ -68,7 +68,7 @@ public class BookRepository {
 
     public List<Book> findAll() {
         MongoCollection<Document> collection = mongoDatabase.getCollection("booking");
-        return collection.find().batchSize(10)
+        return collection.find()
                 .into(new ArrayList<>())
                 .stream()
                 .map(doc -> {
